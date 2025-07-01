@@ -1,1 +1,146 @@
-<p>dashboard works!</p>
+<div class="container mt-4">
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a class="nav-link active" data-bs-toggle="tab" href="#seccion-productos">Productos</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#seccion-categorias">Categorías</a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="seccion-productos">
+      <h2 class="mb-3">Productos</h2>
+
+      <div class="card mb-4 p-3">
+        <h4>Agregar Producto</h4>
+        <form (ngSubmit)="crearProducto()" #productoForm="ngForm" class="row g-2">
+          <div class="col-md-6">
+            <input type="text" [(ngModel)]="nuevoProducto.name" name="name" class="form-control" placeholder="Nombre" required #nameInput="ngModel" />
+            <div *ngIf="nameInput.invalid && nameInput.touched" class="text-danger">El nombre es requerido.</div>
+          </div>
+          <div class="col-md-6">
+            <input type="text" [(ngModel)]="nuevoProducto.description" name="description" class="form-control" placeholder="Descripción" required #descInput="ngModel" />
+            <div *ngIf="descInput.invalid && descInput.touched" class="text-danger">La descripción es requerida.</div>
+          </div>
+          <div class="col-md-4">
+            <input type="number" [(ngModel)]="nuevoProducto.price" name="price" class="form-control" placeholder="Precio" required #priceInput="ngModel" />
+            <div *ngIf="priceInput.invalid && priceInput.touched" class="text-danger">El precio es requerido.</div>
+          </div>
+          <div class="col-md-4">
+            <input type="number" [(ngModel)]="nuevoProducto.stock" name="stock" class="form-control" placeholder="Stock" required #stockInput="ngModel" />
+            <div *ngIf="stockInput.invalid && stockInput.touched" class="text-danger">El stock es requerido.</div>
+          </div>
+          <div class="col-md-4">
+            <select [(ngModel)]="nuevoProducto.categoryId" name="categoryId" class="form-select" required #categorySelect="ngModel">
+              <option value="" disabled selected>Seleccione Categoría</option>
+              <option *ngFor="let categoria of categorias" [value]="categoria.id">{{ categoria.name }}</option>
+            </select>
+            <div *ngIf="categorySelect.invalid && categorySelect.touched" class="text-danger">Debe seleccionar una categoría.</div>
+          </div>
+          <div class="col-12 text-end">
+            <button class="btn btn-success" type="submit" [disabled]="productoForm.invalid">Crear Producto</button>
+          </div>
+        </form>
+      </div>
+<ul>
+  <li *ngFor="let categoria of categorias">
+    {{ categoria.name }} - {{ categoria.description }}
+  </li>
+</ul>
+      <table class="table table-bordered table-hover table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Categoría</th>
+            <th *ngIf="isSuperAdmin">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let producto of productos">
+            <td>{{ producto.name }}</td>
+            <td>{{ producto.description }}</td>
+            <td>₡{{ producto.price }}</td>
+            <td>{{ producto.stock }}</td>
+            <td>{{ producto.category?.name || "Sin categoría" }}</td>
+            <td *ngIf="isSuperAdmin">
+              <button class="btn btn-sm btn-primary me-2" (click)="editarProducto(producto)">Editar</button>
+              <button class="btn btn-sm btn-danger" (click)="eliminarProducto(producto.id)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tab-pane fade" id="seccion-categorias">
+      <h2 class="mb-3">Categorías</h2>
+
+      <div class="card mb-4 p-3" *ngIf="isSuperAdmin">
+        <h4>Agregar Categoría</h4>
+        <form (ngSubmit)="crearCategoria()" #categoriaForm="ngForm" class="row g-2">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Nombre</label>
+            <input type="text" [(ngModel)]="nuevaCategoria.name" name="name" class="form-control" required #catNameModel="ngModel" [ngClass]="{ 'is-invalid': catNameModel.invalid && catNameModel.touched }" />
+            <div *ngIf="catNameModel.invalid && catNameModel.touched" class="text-danger">El nombre es obligatorio.</div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Descripción</label>
+            <input type="text" [(ngModel)]="nuevaCategoria.description" name="description" class="form-control" required #catDescModel="ngModel" [ngClass]="{ 'is-invalid': catDescModel.invalid && catDescModel.touched }" />
+            <div *ngIf="catDescModel.invalid && catDescModel.touched" class="text-danger">La descripción es obligatoria.</div>
+          </div>
+          <div class="col-12 text-end">
+            <button type="submit" class="btn btn-success" [disabled]="categoriaForm.invalid">Crear Categoría</button>
+          </div>
+        </form>
+      </div>
+
+      <table class="table table-bordered table-hover table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th *ngIf="isSuperAdmin">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let categoria of categorias">
+            <td>{{ categoria.name }}</td>
+            <td>{{ categoria.description }}</td>
+            <td *ngIf="isSuperAdmin">
+              <button class="btn btn-sm btn-primary me-2" (click)="abrirModalEditarCategoria(categoria)">Editar</button>
+              <button class="btn btn-sm btn-danger" (click)="eliminarCategoria(categoria.id)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal fade" id="editarCategoriaModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <form *ngIf="categoriaSeleccionada" (ngSubmit)="actualizarCategoria()" #editForm="ngForm" class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Editar Categoría</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body row g-2">
+            <div class="col-md-6">
+              <label class="form-label">Nombre</label>
+              <input type="text" [(ngModel)]="categoriaSeleccionada.name" name="editName" class="form-control" required #editNameModel="ngModel" [ngClass]="{ 'is-invalid': editNameModel.invalid && editNameModel.touched }" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Descripción</label>
+              <input type="text" [(ngModel)]="categoriaSeleccionada.description" name="editDesc" class="form-control" required #editDescModel="ngModel" [ngClass]="{ 'is-invalid': editDescModel.invalid && editDescModel.touched }" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

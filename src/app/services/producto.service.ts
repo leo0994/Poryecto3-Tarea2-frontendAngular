@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Product } from '../../shared/models/product.model';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { Product } from "../shared/models/product.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:8080/api/products'; // ajustá si usás proxy o baseUrl
+  private apiUrl = "http://localhost:8080/api/products";
 
   constructor(private http: HttpClient) {}
 

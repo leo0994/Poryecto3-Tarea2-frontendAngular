@@ -1,0 +1,28 @@
+<h2>{{ editing ? "Editar producto" : "Nuevo producto" }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="save()">
+  <div>
+    <label for="name">Nombre:</label>
+    <input id="name" formControlName="name" type="text" />
+    <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+      El nombre es obligatorio.
+    </div>
+  </div>
+
+  <div>
+    <label for="description">Descripción:</label>
+    <textarea id="description" formControlName="description"></textarea>
+  </div>
+
+  <div>
+    <label for="price">Precio:</label>
+    <input id="price" formControlName="price" type="number" step="0.01" />
+    <div *ngIf="form.get('price')?.invalid && form.get('price')?.touched">
+      El precio es obligatorio.
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="form.invalid">
+    {{ editing ? "Actualizar" : "Crear" }}
+  </button>
+</form>

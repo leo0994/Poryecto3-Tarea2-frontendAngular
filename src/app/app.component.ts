@@ -1,52 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
-interface Operator {
-  name?: string
-  symbol?: string
-}
-
-interface Calculator {
-  name?: string
-  type?: string
-}
+import { Component } from "@angular/core";
+import { RouterModule } from "@angular/router";
+import { FondoBonitoComponent } from "./shared/components/fondo-bonito/fondo-bonito.component";
 
 @Component({
-  selector: 'app-root',
+  selector: "app-root",
   standalone: true,
-  imports: [
-    RouterOutlet,
-    CommonModule
-  ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  imports: [RouterModule, FondoBonitoComponent],
+  templateUrl: "./app.component.html",
 })
-export class AppComponent {
-  title: string = 'demo-angular-front';
-  cant: number = 0;
-  operators: Operator[] = [
-    {
-      name: 'addition',
-      symbol: '+'
-    },
-    {
-      name: 'subtraction',
-      symbol: '-'
-    },
-  ];
-  cal: Calculator = {
-    name: 'My caculator',
-    type: 'simple'
-  };
-  date: Date = new Date(); 
-
-  operation(name: string) {
-    if (name == 'addition') {
-      this.cant++;
-    } else  if (name == 'subtraction') {
-      this.cant--;
-    }
-  }
-
-}
+export class AppComponent {}
